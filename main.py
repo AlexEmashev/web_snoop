@@ -12,9 +12,14 @@ from email.mime.text import MIMEText
 from settings import SETTINGS
 
 
+# Returns absolute path to file (used for names from settings)
+def abs_path(path):
+    return os.path.join(os.path.dirname(__file__), path)
+
+
 # Setup log
 def log_setup():
-    rotate_handler = logging.handlers.RotatingFileHandler(SETTINGS['log_file_name'], maxBytes=2048, backupCount=1)
+    rotate_handler = logging.handlers.RotatingFileHandler(abs_path(SETTINGS['log_file_name']), maxBytes=2048, backupCount=1)
     formatter = logging.Formatter(u'%(filename)s[LINE:%(lineno) d]# %(levelname)-8s [%(asctime)s] %(message)s')
     rotate_handler.setFormatter(formatter)
     logger = logging.getLogger()
@@ -45,6 +50,10 @@ def parse_data(data):
             for interval in planning['intervals']:
                 if interval["free"]:
                     results.append(interval["formattedDate"])
+
+    if len(results) == 0:
+        logging.info(u'There are no results')
+
     return results
 
 
@@ -56,7 +65,7 @@ def format_message(data):
         if len(data) == 0:
             return u''
 
-        mail_template = open(SETTINGS['mail_template']).read()
+        mail_template = open(abs_path(SETTINGS['mail_template'])).read()
         results_list = u'<ul>'
         for item in data:
             results_list += u'<li>' + item + u'</li>'
@@ -76,7 +85,7 @@ def format_message(data):
 # Send mail with notification
 def send_mail(message):
     try:
-        logging.info(u'Sending email...')
+        logging.info('Sending email...')
         from_ = SETTINGS['mail_sender_address']
         to_ = SETTINGS['mail_receiver_address']
 
@@ -111,6 +120,7 @@ def send_mail(message):
         mail.sendmail(from_, to_, msg.as_string())
         mail.quit()
 
+        logging.info('Email sent')
         return True
 
     except Exception as exc:
@@ -121,7 +131,10 @@ def send_mail(message):
 # Function that run all job, if previous doesn't create file with results.
 def run_task():
     # If result file is exist, it means that script has already ran successfully
-    if os.path.isfile(SETTINGS['result_file_name']):
+    if os.path.isfile(abs_path(SETTINGS['result_file_name'])):
+        print 'Check result here ' + os.path.abspath(abs_path((SETTINGS['result_file_name'])))
+        logging.info('Task completed, check results file here ' +
+                     os.path.abspath(abs_path((SETTINGS['result_file_name']))))
         return
     else:
         try:
@@ -132,8 +145,9 @@ def run_task():
             if len(parsed_data) > 0:
                 formatted_message = format_message(parsed_data)
                 send_mail(formatted_message)
+                print 'Mail sent'
                 # Create file with results
-                file_result = open(SETTINGS['result_file_name'], 'w+')
+                file_result = open(abs_path(SETTINGS['result_file_name']), 'w+')
                 file_result.write('Data parsed and sent successfully at ' + datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
                 file_result.close()
 
