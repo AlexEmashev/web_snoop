@@ -111,20 +111,34 @@ def send_mail(message):
         mail.sendmail(from_, to_, msg.as_string())
         mail.quit()
 
-    except Exceptiona as exc:
+        return True
+
+    except Exception as exc:
         logging.error(u'Exception during mail sending ' + exc.message)
         raise
 
 
-# Use of script
-# ToDo: check if message has been sent
-log_setup()
+# Function that run all job, if previous doesn't create file with results.
+def run_task():
+    # If result file is exist, it means that script has already ran successfully
+    if os.path.isfile(SETTINGS['result_file_name']):
+        return
+    else:
+        try:
+            log_setup()
+            data = get_data()
+            parsed_data = parse_data(data)
+            # If there are results, format them and send by email
+            if len(parsed_data) > 0:
+                formatted_message = format_message(parsed_data)
+                send_mail(formatted_message)
+                # Create file with results
+                file_result = open(SETTINGS['result_file_name'], 'w+')
+                file_result.write('Data parsed and sent successfully at ' + datetime.now().strftime('%d.%m.%Y %H:%M:%S'))
+                file_result.close()
 
-try:
-    data = get_data()
-    parsed_data = parse_data(data)
-    formatted_message = format_message(parsed_data)
-    send_mail(formatted_message)
+        except Exception as exc:
+            logging.error(u'Exception ' + exc.message)
 
-except Exception as exc:
-    logging.error(u'Exception ' + exc.message)
+# Run the script
+run_task()

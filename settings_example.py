@@ -9,4 +9,5 @@ SETTINGS = dict(
     mail_smtp_port=587,
     mail_receiver_address='receiver@example.com',
     mail_subject='Report from web_snoop',
-    log_file_name='web_snoop.log')
+    log_file_name='web_snoop.log',
+    result_file_name='result.log')
