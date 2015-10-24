@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    
+    h1, h2, h3 {
+      color: #4a4a4a;
+    }
+    
+    header {
+      text-align: center;
+    }
+    
+    article {
+      margin: 3em;
+    }
+    
+    a:link {
+      color: #456c8e;
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    a:active {
+      color: #58bcd9;
+    }
+    
+    a:visited {
+      color: #585095;
+    }
+  </style>
+  <title>Report from web_snooper</title>
+</head>
+
+<body>
+  <header>
+    <h1>Report from web_snooper</h1>
+  </header>
+  <article>
+  <section>
+   <h2>It is {{date}}</h2>
+    <p>Program has found results you've been interested in.</p>
+    <p>Here they are:</p>
+    {{results}}
+    <p>For more information, please visit <a href="{{visit_url}}">this address</a>.</p>
+  </section>
+  </article>
+</body>
+
+</html>
