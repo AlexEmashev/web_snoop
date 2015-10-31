@@ -10,10 +10,25 @@ One can use this script as the base for it's own, that can inform about a web-re
 
 ##Requirements
 
-- Python v2.7 (not yet tested with 3+)
+- Python v2.7
 - job-scheduler like cron, that can execute script from time to time
 - email address to send and receive messages
 
-##License
+## Installing
+
+1. Place your settings in *settings.py*.
+
+2. Add *main.py* as job for job-scheduler.
+
+3. Add to scheduler
+- In Linux (Mac OS too, I guess) you can use cron:
+`sudo crontab -e`
+Add line to the end of the file, like this:
+`*/10 * * * * /usr/bin/python /home/pi/Documents/web_snoop/main.py`
+This will launch job every 10 minutes.
+
+- In Windows there is a command *taskschd.msc* to launch task scheduler GUI.
+
+## License
 
 The MIT License
