@@ -8,7 +8,7 @@ As a matter of fact it was made, because I had troubles to make an appointment t
 
 One can use this script as the base for it's own, that can inform about a web-resource changes (but be aware, not to DDOS it ;-)).
 
-##Requirements
+## Requirements
 
 - Python v2.7
 - job-scheduler like cron, that can execute script from time to time
